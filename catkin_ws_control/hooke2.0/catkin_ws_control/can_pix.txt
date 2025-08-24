@@ -1,0 +1,23 @@
+roslaunch raw_vehicle_cmd_converter raw_vehicle_converter.launch
+roslaunch pix_driver pix_driver.launch
+roslaunch socketcan_bridge socketcan_bridge.launch 
+
+ rostopic  pub -r 100 /vehicle/raw_vehicle_cmd autoware_vehicle_msgs/RawVehicleCommand "header:
+  seq: 0
+  stamp:
+    secs: 0
+    nsecs: 0
+  frame_id: ''
+control:
+  steering_angle: 0.0
+  steering_angle_velocity: 0.0
+  throttle: 0.0
+  brake: 0.0
+shift:
+  data: 0
+emergency: 0" 
+
+
+
+runtime_manager
+
