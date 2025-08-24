@@ -1,0 +1,3 @@
+<launch>
+    <node name="yolov5_cpp" pkg="yolov5_cpp" type="yolov5_cpp_node" output="screen"/>
+</launch>

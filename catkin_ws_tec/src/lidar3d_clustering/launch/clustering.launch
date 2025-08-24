@@ -1,0 +1,3 @@
+<launch>
+    <node name="lidar3d_clustering" pkg="lidar3d_clustering" type="lidar3d_clustering_node" output="screen"/>
+</launch>

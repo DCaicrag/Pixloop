@@ -1,0 +1,10 @@
+<launch>
+  <node name="yolov5" pkg="yolov5_cpp" type="yolov5_cpp_node" output="screen">
+    <!-- Modelo original que sí funcionaba -->
+    <param name="model_path" value="/home/neousys/ros_drive/catkin_ws_tec/src/yolov5_cpp/yoloFiles/yolov5s.onnx"/>
+
+    <!-- Remapeo del tópico de la ZED -->
+    <remap from="/flir_adk/image_raw" to="/zed/zed_node/stereo/image_rect_color"/>
+  </node>
+</launch>
+

@@ -1,0 +1,9 @@
+<launch>
+    <node name="camera_info_throttle"
+          pkg="topic_tools"
+          type="throttle"
+          args="messages /zed/zed_node/right/camera_info 10 /zed/zed_node/right/camera_info_throttled"
+          output="screen"/>
+          
+    <node name="pointscloud_detector" pkg="pointscloud_detector" type="pointscloud_detector_node" output="screen"/>
+</launch>

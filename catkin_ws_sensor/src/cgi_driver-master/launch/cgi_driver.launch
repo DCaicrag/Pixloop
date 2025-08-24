@@ -1,0 +1,11 @@
+<launch>
+    <!-- parameters -->
+    <arg name="serial_port" default="/dev/ttyUSB1" doc="device file of the IMU"/>
+    <arg name="serial_baud" default="230400" doc="baudrate of the IMU"/>
+
+    <!-- node -->
+	<node pkg="cgi_driver" type="cgi_reader.py" name="cgi_driver" output="screen" >
+		<param name="serial_port" value="$(arg serial_port)"/>
+		<param name="serial_baud" value="$(arg serial_baud)"/>
+	</node>
+</launch>

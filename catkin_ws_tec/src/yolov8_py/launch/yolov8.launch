@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="yolov8_py" type="yolov8NiagaraBetter.py" name="yolov8_node" output="screen" />
+
+
+</launch>
