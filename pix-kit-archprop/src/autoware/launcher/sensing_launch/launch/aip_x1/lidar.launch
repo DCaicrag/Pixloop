@@ -1,0 +1,145 @@
+<launch>
+
+  <arg name="launch_driver" default="true" />
+  <arg name="use_concat_filter" default="true" />
+  <arg name="use_radius_search" default="false" />
+
+  <group ns="lidar">
+
+    <group ns="top">
+      <include file="$(find sensing_launch)/launch/velodyne_VLP16.launch">
+        <arg name="sensor_frame" default="velodyne_top" />
+        <arg name="device_ip" value="192.168.1.20"/>
+        <arg name="port" value="2368"/>
+        <arg name="launch_driver" value="$(arg launch_driver)" />
+      </include>
+    </group>
+
+    <group ns="front_left">
+      <include file="$(find sensing_launch)/launch/livox_horizon.launch">
+        <arg name="sensor_frame" default="livox_front_left" />
+        <arg name="bd_list" value="$(env LIVOX_FRONT_LEFT_ID)" if="$(arg launch_driver)"/>
+        <arg name="xfer_format" value="0"/>
+        <arg name="launch_driver" value="$(arg launch_driver)" />
+      </include>
+    </group>
+
+    <group ns="front_center">
+      <include file="$(find sensing_launch)/launch/livox_horizon.launch">
+        <arg name="sensor_frame" default="livox_front_center" />
+        <arg name="bd_list" value="$(env LIVOX_FRONT_CENTER_ID)" if="$(arg launch_driver)"/>
+        <arg name="xfer_format" value="0"/>
+        <arg name="launch_driver" value="$(arg launch_driver)" />
+      </include>
+    </group>
+
+    <group ns="front_right">
+      <include file="$(find sensing_launch)/launch/livox_horizon.launch">
+        <arg name="sensor_frame" default="livox_front_right" />
+        <arg name="bd_list" value="$(env LIVOX_FRONT_RIGHT_ID)" if="$(arg launch_driver)"/>
+        <arg name="xfer_format" value="0"/>
+        <arg name="launch_driver" value="$(arg launch_driver)" />
+      </include>
+    </group>
+
+    <!-- nodelet manager -->
+    <arg name="manager" default="lidar_nodelet_manager" />
+    <node pkg="nodelet" type="nodelet" name="$(arg manager)" args="manager" />
+
+
+    <!-- PointCloud PassThrough Filter -->
+    <group unless="$(arg use_concat_filter)">
+      <node pkg="nodelet" type="nodelet" name="passthrough_filter" args="load pointcloud_preprocessor/passthrough_filter_nodelet $(arg manager)">
+        <remap from="~input" to="top/outlier_filtered/pointcloud" />
+        <remap from="~output" to="concatenated/pointcloud" />
+        <param name="output_frame" value="base_link" />
+      </node>
+    </group>
+
+    <!-- PointCloud Concat Filter -->
+    <group if="$(arg use_concat_filter)">
+      <node pkg="nodelet" type="nodelet" name="concatenate_data" args="load pointcloud_preprocessor/concatenate_data_nodelet $(arg manager)">
+        <rosparam param="input_topics" subst_value="true">
+          [/sensing/lidar/top/outlier_filtered/pointcloud,
+          /sensing/lidar/front_left/mirror_cropped/pointcloud,
+          /sensing/lidar/front_right/mirror_cropped/pointcloud,
+          /sensing/lidar/front_center/mirror_cropped/pointcloud]
+        </rosparam>
+        <remap from="~output" to="concatenated/pointcloud" />
+        <param name="output_frame" value="base_link" />
+      </node>
+    </group>
+
+    <!-- PointCloud Crop Mesurement Range -->
+    <node pkg="nodelet" type="nodelet" name="crop_box_filter" args="load pointcloud_preprocessor/crop_box_filter_nodelet $(arg manager)">
+      <remap from="~input" to="concatenated/pointcloud" />
+      <remap from="~output" to="mesurement_range_cropped/pointcloud" />
+      <param name="min_x" value="-50.0" />
+      <param name="max_x" value="100.0" />
+      <param name="min_y" value="-50.0" />
+      <param name="max_y" value="50.0" />
+      <remap from="~min_z" to="/vehicle_info/min_height_offset" />
+      <remap from="~max_z" to="/vehicle_info/max_height_offset" />
+      <param name="negative" value="False" />
+      <param name="input_frame" value="base_link" />
+      <param name="output_frame" value="base_link" />
+    </node>
+
+    <!-- PointCloud Ground Filter -->
+    <node pkg="nodelet" type="nodelet" name="ray_ground_filter" args="load pointcloud_preprocessor/ray_ground_filter_nodelet $(arg manager)">
+      <remap from="~input" to="mesurement_range_cropped/pointcloud" />
+      <remap from="~output" to="no_ground/pointcloud_with_outlier" />
+      <param name="initial_max_slope" value="1.0" />
+      <param name="general_max_slope" value="10.0" />
+      <param name="local_max_slope" value="10.0" />
+      <param name="min_height_threshold" value="0.1" />
+      <param name="use_vehicle_footprint" value="true" />
+      <remap from="~min_x" to="/vehicle_info/min_longitudinal_offset" />
+      <remap from="~max_x" to="/vehicle_info/max_longitudinal_offset" />
+      <remap from="~min_y" to="/vehicle_info/min_lateral_offset" />
+      <remap from="~max_y" to="/vehicle_info/max_lateral_offset" />
+    </node>
+
+    <!-- to reduce caluculation cost  -->
+    <node pkg="nodelet" type="nodelet" name="voxel_grid_filter" args="load pointcloud_preprocessor/voxel_grid_downsample_filter_nodelet $(arg manager)">
+      <remap from="~input" to="no_ground/pointcloud_with_outlier" />
+      <remap from="~output" to="voxel_grid_filtered/pointcloud" />
+      <rosparam>
+        voxel_size_x: 0.04
+        voxel_size_y: 0.04
+        voxel_size_z: 0.08
+        input_frame: base_link
+        output_frame: base_link
+      </rosparam>
+    </node>
+
+    <!-- PointCloud Outlier Filter -->
+    <group if="$(arg use_radius_search)">
+      <node pkg="nodelet" type="nodelet" name="$(arg manager)_radius_search_2d_outlier_filter" args="load pointcloud_preprocessor/radius_search_2d_outlier_filter_nodelet $(arg manager)">
+        <remap from="~input" to="voxel_grid_filtered/pointcloud" />
+        <remap from="~output" to="no_ground/pointcloud" />
+        <rosparam>
+          search_radius: 0.2
+          min_neighbors: 5
+        </rosparam>
+      </node>
+    </group>
+
+    <group unless="$(arg use_radius_search)">
+      <node pkg="nodelet" type="nodelet" name="$(arg manager)_voxel_grid_outlier_filter" args="load pointcloud_preprocessor/voxel_grid_outlier_filter_nodelet $(arg manager)">
+        <remap from="~input" to="voxel_grid_filtered/pointcloud" />
+        <remap from="~output" to="no_ground/pointcloud" />
+        <rosparam>
+        voxel_size_x: 0.4
+        voxel_size_y: 0.4
+        voxel_size_z: 100
+        voxel_points_threshold: 5
+        </rosparam>
+      </node>
+    </group>
+
+    <!-- Relay -->
+    <node pkg="topic_tools" type="relay" name="relay" args="/sensing/lidar/top/rectified/pointcloud /sensing/lidar/pointcloud" />
+
+  </group>
+</launch>

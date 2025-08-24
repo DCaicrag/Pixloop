@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- load parameter -->
+  <xacro:property name="vehicle_info" value="${load_yaml('$(find hooke_description)/config/vehicle_info.yaml')}"/>
+
+  <!-- vehicle body -->
+  <link name="base_link">
+    <visual>
+      <origin xyz="${vehicle_info['wheel_base']*0.0} 0 0.1" rpy="${pi/2.0} 0 ${pi/2.0}"/>
+      <geometry>
+        <mesh filename="package://hooke_description/mesh/sweeper.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+  </link>
+
+</robot>

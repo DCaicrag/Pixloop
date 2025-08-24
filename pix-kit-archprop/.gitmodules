@@ -1,0 +1,16 @@
+[submodule "src/pix-citybot-v2-perception-models"]
+	path = src/pix-citybot-v2-perception-models
+	url = http://172.16.4.20:9010/autonomous_driving/pix-citybot-v2-perception-models.git
+	branch = feature/archetecture_proposal_kit
+[submodule "src/pix-citybot-v2-descriptions"]
+	path = src/pix-citybot-v2-descriptions
+	url = http://172.16.4.20:9010/autonomous_driving/pix-citybot-v2-descriptions.git
+	branch = master
+[submodule "src/vendor/ouster-ros"]
+	path = src/vendor/ouster-ros
+	url = https://github.com/ouster-lidar/ouster-ros.git
+	branch = master
+[submodule "src/calibration/accel_brake_map_calibrator"]
+	path = src/calibration/accel_brake_map_calibrator
+	url = http://172.16.4.20:9010/autonomous_driving/accel_brake_map_calibrator.git
+	branch = feature/architecture_proposal_kit

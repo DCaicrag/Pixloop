@@ -1,0 +1,54 @@
+repositories:
+  # autoware
+  autoware/AutowareArchitectureProposal.iv:
+    type: git
+    url: git@github.com:tier4/AutowareArchitectureProposal.iv.git
+    version: v0.9.1 
+  autoware/launcher:
+    type: git
+    url: git@github.com:tier4/autoware_launcher.iv.universe.git
+    version: v0.9.1 
+  # description
+  description/sensor/sensor_description:
+    type: git
+    url: git@github.com:tier4/sensor_description.iv.universe.git
+    version: v0.9.1 
+  description/vehicle/lexus_description:
+    type: git
+    url: git@github.com:tier4/lexus_description.iv.universe.git
+    version: v0.9.1 
+  # simulator
+  simulator/planning_simulator:
+    type: git
+    url: git@github.com:tier4/planning_simulator.iv.universe.git
+    version: v0.9.1 
+  simulator/planning_simulator_launcher:
+    type: git
+    url: git@github.com:tier4/planning_sim_launcher.iv.universe.git
+    version: v0.9.1 
+  simulator/scenario_runner:
+    type: git
+    url: git@github.com:tier4/scenario_runner.iv.universe.git
+    version: v0.9.1 
+  # vendor
+  vendor/livox_ros_driver:
+    type: git
+    url: git@github.com:tier4/livox_ros_driver.git
+    version: 8e6235289784d9f2b6972834d57c1e8b9fe876d1
+  vendor/velodyne_vls:
+    type: git
+    url: git@github.com:tier4/velodyne_vls.git
+    version: a813ad6c17ab67d3e565b46452afe9666088fd69
+  vendor/ublox:
+    type: git
+    url: git@github.com:tier4/ublox.git
+    version: 55d0a1167ead576ee963a6d8ebe3a7831d685787
+  vendor/tamagawa_imu_driver:
+    type: git
+    url: git@github.com:tier4/tamagawa_imu_driver.git
+    version: cb2a519ec5a0f4d69bf2ab6f3945c123bc80389b
+  # calibration
+  calibration/tunable_static_tf_broadcaster:
+    type: git
+    url: git@github.com:tier4/tunable_static_tf_broadcaster.git
+    version: ab29402781070ed8764a1e091624ffcb932ac2fb

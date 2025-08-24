@@ -1,0 +1,7 @@
+<launch>
+  <include file="$(find mission_planner)/launch/mission_planner.launch">
+  </include>
+
+  <include file="$(find mission_planner)/launch/goal_pose_visualizer.launch">
+  </include>
+</launch>

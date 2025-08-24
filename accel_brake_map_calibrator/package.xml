@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>accel_brake_map_calibrator</name>
+  <version>0.1.0</version>
+  <description>The accel_brake_map_calibrator package</description>
+
+  <maintainer email="guanghang@pixmoving.net">Guanghang Cai</maintainer>
+  <license>Apache2</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <depend>visualization_msgs</depend>
+  <depend>tf</depend>
+  <depend>geometry_msgs</depend>
+  <depend>raw_vehicle_cmd_converter</depend>
+  <depend>tf2_ros</depend>
+  <depend>pix_hooke_driver_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>nav_msgs</depend>
+
+  <depend>mesasge_generation</depend>
+</package>

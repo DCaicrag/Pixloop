@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot name="vehicle"
+  xmlns:xacro="http://ros.org/wiki/xacro">
+  <link name="zed_base_link" />
+  <!-- <link name="base_link" />  -->
+  <link name="rs16" />
+  <link name="rsbp" />
+  <link name="os_sensor" />
+
+  <xacro:arg name="config_dir" default="$(find hooke_sensor_kit_description)"/>
+  <xacro:property name="calibration" value="${load_yaml('$(arg config_dir)/sensors_calibration.yaml')}"/>
+
+ <!-- embedded sensors -->
+
+  <!-- <xacro:include filename="$(find livox_description)/urdf/livox_horizon.xacro"/>
+  <xacro:livox_horizon_macro suffix="rs16" parent="base_link" x="${calibration['base_link2rs16']['x']}" y="${calibration['base_link2rs16']['y']}" z="${calibration['base_link2rs16']['z']}" roll="${calibration['base_link2rs16']['roll']}" pitch="${calibration['base_link2rs16']['pitch']}" yaw="${calibration['base_link2rs16']['yaw']}" />
+  <xacro:livox_horizon_macro suffix="rsbp" parent="rs16" x="${calibration['rs162rsbp']['x']}" y="${calibration['rs162rsbp']['y']}" z="${calibration['rs162rsbp']['z']}" roll="${calibration['rs162rsbp']['roll']}" pitch="${calibration['rs162rsbp']['pitch']}" yaw="${calibration['rs162rsbp']['yaw']}" />
+  <xacro:livox_horizon_macro suffix="base_link" parent="zed2i_left_camera_frame" x="${calibration['zed2base_link']['x']}" y="${calibration['zed2base_link']['y']}" z="${calibration['zed2base_link']['z']}" roll="${calibration['zed2base_link']['roll']}" pitch="${calibration['zed2base_link']['pitch']}" yaw="${calibration['zed2base_link']['yaw']}" /> -->
+  <joint name="zed_baselink" type="fixed">
+    <parent link="base_link" />
+    <child link="zed_base_link" />
+    <origin xyz="${calibration['base_link2zed']['x']} ${calibration['base_link2zed']['y']} ${calibration['base_link2zed']['z']}" rpy="${calibration['base_link2zed']['roll']} ${calibration['base_link2zed']['pitch']} ${calibration['base_link2zed']['yaw']}" />
+    </joint>
+  <joint name="baselink_rsbp" type="fixed">
+    <parent link="base_link" />
+    <child link="rsbp" />
+    <origin xyz="${calibration['base_link2rsbp']['x']} ${calibration['base_link2rsbp']['y']} ${calibration['base_link2rsbp']['z']}" rpy="${calibration['base_link2rsbp']['roll']} ${calibration['base_link2rsbp']['pitch']} ${calibration['base_link2rsbp']['yaw']}" />
+  </joint>
+  <joint name="baselink_rs16" type="fixed">
+    <parent link="base_link" />
+    <child link="rs16" />
+    <origin xyz="${calibration['base_link2rs16']['x']} ${calibration['base_link2rs16']['y']} ${calibration['base_link2rs16']['z']}" rpy="${calibration['base_link2rs16']['roll']} ${calibration['base_link2rs16']['pitch']} ${calibration['base_link2rs16']['yaw']}" />
+  
+  </joint>
+    <joint name="baselink_ouster" type="fixed">
+    <parent link="base_link" />
+    <child link="os_sensor" />
+    <origin xyz="${calibration['base_link2ouster']['x']} ${calibration['base_link2ouster']['y']} ${calibration['base_link2ouster']['z']}" rpy="${calibration['base_link2ouster']['roll']} ${calibration['base_link2ouster']['pitch']} ${calibration['base_link2ouster']['yaw']}" />
+  </joint>
+</robot>

@@ -1,0 +1,64 @@
+<launch>
+  <!-- Params -->
+  <arg name="sensor_frame" default="livox_frame" />
+  <arg name="lvx_file_path" default="livox_test.lvx"/>
+  <arg name="bd_list_text" />
+  <arg name="xfer_format" default="0"/>
+  <arg name="multi_topic" default="0"/>
+  <arg name="data_src" default="0"/>
+  <arg name="publish_freq" default="10.0"/>
+  <arg name="output_type" default="0"/>
+  <arg name="base_frame" default="base_link" />
+  <arg name="manager" default="livox_nodelet_manager" />
+  <arg name="launch_driver" default="true" />
+
+  <!-- nodelet manager -->
+  <node pkg="nodelet" type="nodelet" name="$(arg manager)" args="manager" />
+
+  <group if="$(arg launch_driver)">
+    <param name="xfer_format" value="$(arg xfer_format)"/>
+    <param name="multi_topic" value="$(arg multi_topic)"/>
+    <param name="data_src" value="$(arg data_src)"/>
+    <param name="publish_freq" type="double" value="$(arg publish_freq)"/>
+    <param name="output_data_type" value="$(arg output_type)"/>
+    <param name="cmdline_str" type="string" textfile="$(arg bd_list_text)"/>
+    <param name="cmdline_file_path" type="string" value="$(arg lvx_file_path)"/>
+    <param name="user_config_path" type="string" value="$(find livox_ros_driver)/config/livox_lidar_config.json"/>
+    <param name="frame_id" value="$(arg sensor_frame)" />
+
+    <node name="livox_lidar_publisher" pkg="livox_ros_driver" type="livox_ros_driver_node" output="screen">
+    </node>
+  </group>
+
+  <!-- crop self -->
+  <node pkg="nodelet" type="nodelet" name="$(arg manager)_crop_box_filter_self" args="load pointcloud_preprocessor/crop_box_filter_nodelet $(arg manager)" output="log">
+    <remap from="~input" to="livox/lidar" />
+    <remap from="~output" to="self_cropped/pointcloud" />
+    <remap from="~min_x" to="/vehicle_info/min_longitudinal_offset" />
+    <remap from="~max_x" to="/vehicle_info/max_longitudinal_offset" />
+    <remap from="~min_y" to="/vehicle_info/min_lateral_offset" />
+    <remap from="~max_y" to="/vehicle_info/max_lateral_offset" />
+    <remap from="~min_z" to="/vehicle_info/min_height_offset" />
+    <remap from="~max_z" to="/vehicle_info/max_height_offset" />
+
+    <param name="negative" value="True" />
+    <param name="input_frame" value="$(arg base_frame)" />
+    <param name="output_frame" value="$(arg base_frame)" />
+  </node>
+
+  <!-- crop mirror -->
+  <node pkg="nodelet" type="nodelet" name="$(arg manager)_crop_box_filter_mirror" args="load pointcloud_preprocessor/crop_box_filter_nodelet $(arg manager)" output="log">
+    <remap from="~input" to="self_cropped/pointcloud" />
+    <remap from="~output" to="mirror_cropped/pointcloud" />
+    <remap from="~min_x" to="/vehicle_info/mirror/min_longitudinal_offset" />
+    <remap from="~max_x" to="/vehicle_info/mirror/max_longitudinal_offset" />
+    <remap from="~min_y" to="/vehicle_info/mirror/min_lateral_offset" />
+    <remap from="~max_y" to="/vehicle_info/mirror/max_lateral_offset" />
+    <remap from="~min_z" to="/vehicle_info/mirror/min_height_offset" />
+    <remap from="~max_z" to="/vehicle_info/mirror/max_height_offset" />
+    <param name="negative" value="True" />
+    <param name="input_frame" value="$(arg base_frame)" />
+    <param name="output_frame" value="$(arg base_frame)" />
+  </node>
+
+</launch>

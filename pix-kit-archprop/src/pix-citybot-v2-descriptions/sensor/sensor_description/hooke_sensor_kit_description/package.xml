@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>hooke_sensor_kit_description</name>
+  <version>0.1.0</version>
+  <description>The hooke_sensor_kit_description package</description>
+
+  <maintainer email="mark@pixmoving.net">Mark Jin</maintainer>
+  <license>Apache 2</license>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package>

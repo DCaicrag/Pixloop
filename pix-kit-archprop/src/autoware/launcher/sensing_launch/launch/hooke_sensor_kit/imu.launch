@@ -1,0 +1,11 @@
+<launch>
+
+  <arg name="launch_driver" default="true" />
+
+  <group ns="imu">
+
+    <!-- Relay -->
+    <node pkg="topic_tools" type="relay" name="relay" args="/imu/data /sensing/imu/imu_data" />
+  </group>
+
+</launch>

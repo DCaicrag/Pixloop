@@ -1,0 +1,1 @@
+timestamp,velocity,accel,pitch_comp_accel,final_accel,accel_pedal,brake_pedal,accel_pedal_speed,brake_pedal_speed,pitch,steer,jerk,full_original_accel_rmse, part_original_accel_rmse,new_accel_rmse, rmse_rate

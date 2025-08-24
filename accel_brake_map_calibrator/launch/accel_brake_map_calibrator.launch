@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <arg name="accel_brake_map_calib_param" default="$(find accel_brake_map_calibrator)/config/accel_brake_map_calibrator.yaml"/>
+  <arg name="csv_default_map_dir" default="$(find raw_vehicle_cmd_converter)/data/default/"/>
+  <arg name="csv_calibrated_map_dir" default="$(find accel_brake_map_calibrator)/config/"/>
+  <arg name="logger_level" default="info"/>
+  <arg name="rviz" default="true"/>
+  <arg name="pedal_accel_graph_output" default="true"/>
+  <arg name="auto_update" default="false"/>
+  <arg name="progress_file_output" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="get_pitch_method" default="none" />
+
+  <!-- calibration interface -->
+  <node pkg="accel_brake_map_calibrator" type="accel_brake_map_calibrator_node" name="accel_brake_map_calibrator" output="screen">
+    <rosparam command="load" file="$(arg accel_brake_map_calib_param)"/>
+    <remap from="input/velocity" to="/localization/twist"/>
+    <remap from="input/steer" to="/pix_hooke/v2a_steerstafb"/>
+    <remap from="input/throttle" to="/pix_hooke/v2a_drivestafb"/>
+    <remap from="input/brake" to="/pix_hooke/v2a_brakestafb"/>
+    <remap from="input/actuation_status" to="/vehicle/status/actuation_status"/>
+    <remap from="input/update_map_dir" to="~/update_map_dir"/>
+    <param name="auto_update" value="$(arg auto_update)"/>
+    <param name="csv_default_map_dir" value="$(arg csv_default_map_dir)"/>
+    <param name="csv_calibrated_map_dir" value="$(arg csv_calibrated_map_dir)"/>
+    <param name="output_log_file" value="$(find accel_brake_map_calibrator)/config/log.csv"/>
+    <param name="pedal_accel_graph_output" value="$(arg pedal_accel_graph_output)"/>
+    <param name="progress_file_output" value="$(arg progress_file_output)"/>
+    <param name="get_pitch_method" value="$(arg get_pitch_method)" />
+  </node>
+
+  <!-- calibration plot and map server node -->
+  <!-- node pkg="accel_brake_map_calibrator" type="new_accel_brake_map_server.py" name="new_accel_brake_map_server" output="screen"/-->
+  <!-- Rviz -->
+  <node pkg="rviz" type="rviz" name="rviz" output="screen" args="-d $(find accel_brake_map_calibrator)/rviz/occupancy.rviz" if="$(arg rviz)"/>
+</launch>

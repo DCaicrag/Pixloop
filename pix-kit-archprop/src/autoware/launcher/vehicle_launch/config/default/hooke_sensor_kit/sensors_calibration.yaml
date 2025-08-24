@@ -1,0 +1,28 @@
+base_link2rsbp:
+  x: 0.786
+  y: -0.006
+  z: 0.582  
+  roll: 0.518
+  pitch: 1.351
+  yaw: 0.549
+base_link2rs16:
+  x: 0.00
+  y: 0.00
+  z: 1.5
+  roll: 0.0
+  pitch: 0.0
+  yaw: 0.0
+base_link2zed:
+  x: 0.787
+  y: -0.031
+  z: 1.065
+  roll: 0.008
+  pitch: 0.292
+  yaw: 0.020
+base_link2ouster:
+  x: 0.00
+  y: 0.00
+  z: 1.5
+  roll: 0.0
+  pitch: 0.0
+  yaw: 0.0
