@@ -1,0 +1,14 @@
+<launch>
+    <!-- ✅ Cargar parámetros desde archivo YAML -->
+    <rosparam file="$(find yolo_ros)/config/yolo_params.yaml" command="load" />
+
+    <!-- ✅ Nodo YOLO -->
+    <node pkg="yolo_ros"
+          type="yolo_inference_node.py"
+          name="yolo_inference"
+          output="screen"
+          respawn="false">
+        <!-- Esto asegura que se use Python correctamente -->
+        <param name="use_sim_time" value="false" />
+    </node>
+</launch>

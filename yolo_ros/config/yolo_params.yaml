@@ -1,0 +1,15 @@
+# ==== Configuración general del nodo YOLO ====
+
+# Ruta del modelo YOLO
+weights_path: "$(find yolo_ros)/models/yolov8s.pt"
+
+# Umbral de confianza para filtrar detecciones
+conf_threshold: 0.3
+
+# Tópicos de ROS
+image_topic: "/camera/image_raw"
+bounding_boxes_topic: "/yolo/bounding_boxes"
+detection_image_topic: "/yolo/detection_image"
+
+# Visualización (publicar imagen anotada)
+publish_annotated_image: true

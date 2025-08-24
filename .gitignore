@@ -1,0 +1,16 @@
+build/
+devel/
+install/
+log/
+*.launch.*
+*.log
+*.bag
+*.swp
+*.zip
+*.tar.gz
+*.run
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+
